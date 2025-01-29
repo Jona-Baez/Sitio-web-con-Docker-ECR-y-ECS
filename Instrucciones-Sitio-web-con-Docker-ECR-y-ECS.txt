@@ -1,0 +1,55 @@
+Docker, ECR y ECS
+
+PASO 1
+*-*-*-* Crear una imagen Docker para el sitio web *-*-*-*
+Crear un archivo index.html
+Crear un archivo Dockerfile
+Construir la imagen con un tag
+ -docker build -t NOMBREDELAIMAGEN UBICACIONDELAIMAGEN
+ -docker build -t mi-sitio-web .
+Probar la imagen la imagen</h3>
+ -docker run -d -p 8080:80 IMAGENAPROBAR
+ -docker run -d -p 8080:80 mi-sitio-web
+
+PASO 2
+*-*-*-* Subir la imagen a ECR *-*-*-*
+Crear repositorio en ECR: mi-sitio-web-repo
+Autenticar entre perfiles
+ -aws ecr get-login-password --region REGION_ORIGEN --profile NOMBRE_DEL_PERFIL | docker login --username AWS --password-stdin ID_CUENTA.dkr.ecr.REGION.amazonaws.com
+ -aws ecr get-login-password --region us-east-1 --profile dev | docker login --username AWS --password-stdin 637423349711.dkr.ecr.us-east-1.amazonaws.com
+Autenticar con perfil por default
+ -aws ecr get-login-password --region *REGION* | docker login --username AWS --password-stdin IDDELACUENTA.dkr.ecr.*REGION*.amazonaws.com
+ -aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 578234568011.dkr.ecr.us-east-1.amazonaws.com
+Etiquetar la imagen
+ -docker tag mi-sitio-web:latest *IDDELACUENTA*.dkr.ecr.*REGION*.amazonaws.com/mi-sitio-web-repo:TAG
+ -docker tag mi-sitio-web:latest 578234568011.dkr.ecr.us-east-1.amazonaws.com/mi-sitio-web-repo:v1.0
+Subir a ECR
+-docker push *IDDELACUENTA*.dkr.ecr.*REGION*.amazonaws.com/NOMBREDELREPO:TAG
+-docker push 578234568011.dkr.ecr.us-east-1.amazonaws.com/mi-sitio-web-repo:v1.0
+
+PASO 3
+*-*-*-* Desplegar la imagen en ECS *-*-*-*
+Crear cluster (fargate): mi-cluster-web
+Crear task definition (fargate): mi-task-definition con 0.5 vCPU y 1 GB Memory
+Añadir contenedor a la task
+ -Nombre del contenedor: mi-sitio-web
+ -IDDELACUENTA.dkr.ecr.region.amazonaws.com/mi-sitio-web-repo:latest
+ -puerto: 80
+Crear y ejecutar el servicio:
+ -Ir a services y configurarlo con Fargate: mi-sitio-web-service
+ -Desired task: 1
+ -Configurar en una subred publica
+ -Configurar el SG del service: mi-sitio-web-service-sg, http (80) entrada
+ -Activar la IP publica
+ -Elegir el cluster y la task defnition
+
+PASO 4
+*-*-*-* Acceder al sitio web *-*-*-*
+Copiar la IP publica de la task y acceder a ella
+Actualizar el service con 2 tareas
+
+PASO 5
+*-*-*-* Deployar una nueva versión *-*-*-*
+Editar el HTML, construir la imagen, etiquetarla y subirla a ECR
+Crear una nueva revision de task y actualizar el service con ella
+Obtener la nueva IP publica
