@@ -1,4 +1,4 @@
-Docker, ECR y ECS
+Sitio-web-con-Docker-ECR-y-ECS
 
 PASO 1
 *-*-*-* Crear una imagen Docker para el sitio web *-*-*-*
