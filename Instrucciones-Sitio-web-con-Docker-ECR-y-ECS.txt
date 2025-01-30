@@ -18,7 +18,7 @@ Autenticar entre perfiles
  -aws ecr get-login-password --region REGION_ORIGEN --profile NOMBRE_DEL_PERFIL | docker login --username AWS --password-stdin ID_CUENTA.dkr.ecr.REGION.amazonaws.com
  -aws ecr get-login-password --region us-east-1 --profile dev | docker login --username AWS --password-stdin 637423349711.dkr.ecr.us-east-1.amazonaws.com
 Autenticar con perfil por default
- -aws ecr get-login-password --region *REGION* | docker login --username AWS --password-stdin IDDELACUENTA.dkr.ecr.*REGION*.amazonaws.com
+ -aws ecr get-login-password --region *REGION* | docker login --username AWS --password-stdin ID_CUENTA.dkr.ecr.REGION.amazonaws.com
  -aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 578234568011.dkr.ecr.us-east-1.amazonaws.com
 Etiquetar la imagen
  -docker tag mi-sitio-web:latest *IDDELACUENTA*.dkr.ecr.*REGION*.amazonaws.com/mi-sitio-web-repo:TAG
